@@ -13,7 +13,7 @@ interface QuestionDetailPageProps {
 
 const QuestionDetailPage: React.FC<QuestionDetailPageProps> = ({ question, onBack }) => {
   const { user } = useAuth();
-  const { voteOnQuestion, voteOnAnswer, acceptAnswer, addAnswer, addAIAnswer, votes, incrementQuestionViews } = useData();
+  const { voteOnQuestion, voteOnAnswer, acceptAnswer, addAnswer, addAIAnswer, votes, incrementQuestionViews, error, clearError } = useData();
   const [answerContent, setAnswerContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
@@ -115,6 +115,22 @@ const QuestionDetailPage: React.FC<QuestionDetailPageProps> = ({ question, onBac
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
+      {error && (
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0"></div>
+              <span>{error}</span>
+            </div>
+            <button
+              onClick={clearError}
+              className="text-red-600 hover:text-red-800 font-medium"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* Header */}
         <div className="mb-6 sm:mb-8">

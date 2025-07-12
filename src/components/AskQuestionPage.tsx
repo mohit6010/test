@@ -10,34 +10,35 @@ interface AskQuestionPageProps {
 
 const AskQuestionPage: React.FC<AskQuestionPageProps> = ({ onBack }) => {
   const { user } = useAuth();
-  const { addQuestion } = useData();
+  const { addQuestion, error, clearError } = useData();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     tags: [] as string[]
   });
   const [tagInput, setTagInput] = useState('');
-  const [error, setError] = useState('');
+  const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
-    setError('');
+    setFormError('');
+    clearError();
     
     if (formData.title.trim().length < 10) {
-      setError('Title must be at least 10 characters long');
+      setFormError('Title must be at least 10 characters long');
       return;
     }
     
     if (formData.description.trim().length < 20) {
-      setError('Description must be at least 20 characters long');
+      setFormError('Description must be at least 20 characters long');
       return;
     }
     
     if (formData.tags.length === 0) {
-      setError('Please add at least one tag');
+      setFormError('Please add at least one tag');
       return;
     }
 
@@ -54,7 +55,7 @@ const AskQuestionPage: React.FC<AskQuestionPageProps> = ({ onBack }) => {
       
       onBack();
     } catch (err) {
-      setError('Failed to submit question. Please try again.');
+      setFormError('Failed to submit question. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -151,10 +152,10 @@ const AskQuestionPage: React.FC<AskQuestionPageProps> = ({ onBack }) => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
-              {error && (
+              {(error || formError) && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl flex items-center space-x-3">
                   <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0"></div>
-                  <span>{error}</span>
+                  <span>{error || formError}</span>
                 </div>
               )}
 

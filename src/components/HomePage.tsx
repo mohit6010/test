@@ -10,7 +10,7 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({ onQuestionClick }) => {
-  const { questions } = useData();
+  const { questions, isLoading, error, clearError } = useData();
   const { user } = useAuth();
   const [sortBy, setSortBy] = useState<'newest' | 'votes' | 'views'>('newest');
   const [filterBy, setFilterBy] = useState<'all' | 'unanswered' | 'answered'>('all');
@@ -55,6 +55,22 @@ const HomePage: React.FC<HomePageProps> = ({ onQuestionClick }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
+      {error && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0"></div>
+              <span>{error}</span>
+            </div>
+            <button
+              onClick={clearError}
+              className="text-red-600 hover:text-red-800 font-medium"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <div className="flex flex-col xl:flex-row gap-6 lg:gap-8">
           {/* Main Content */}
@@ -106,7 +122,17 @@ const HomePage: React.FC<HomePageProps> = ({ onQuestionClick }) => {
 
             {/* Questions List */}
             <div className="space-y-4 lg:space-y-6">
-              {filteredQuestions.length === 0 ? (
+              {isLoading ? (
+                <div className="space-y-4">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-6 lg:p-8 animate-pulse">
+                      <div className="h-6 bg-gray-200 rounded-2xl mb-4"></div>
+                      <div className="h-4 bg-gray-200 rounded-xl mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded-xl w-3/4"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : filteredQuestions.length === 0 ? (
                 <div className="text-center py-12 lg:py-16">
                   <div className="w-20 h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <MessageSquare className="h-10 w-10 lg:h-12 lg:w-12 text-gray-400" />

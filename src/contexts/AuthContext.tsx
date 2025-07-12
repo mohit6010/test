@@ -87,6 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateUserStats = async (userId: string) => {
     try {
+      setIsLoading(true);
       // Get current answer count
       const { count } = await supabase
         .from('answers')
@@ -112,6 +113,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await fetchUserProfile(userId);
     } catch (error) {
       console.error('Error updating user stats:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
