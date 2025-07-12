@@ -90,7 +90,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('answers')
         .select(`
           *,
-          author:users!answers_author_id_fkey(*)
+          author:users(*)
         `)
         .order('created_at', { ascending: true });
 
